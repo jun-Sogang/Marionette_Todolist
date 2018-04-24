@@ -11,7 +11,33 @@ var TodoList = Marionette.CompositeView.extend({
   template: require('./templates/todolist.html'),
 
   childView: ToDo,
-  childViewContainer: 'ul'
+  childViewContainer: 'ul',
+
+  ui: {
+    assignee: '#id_assignee',
+    form: 'form',
+    text: '#id_text',
+  },
+
+  triggers: {
+    'submit @ui.form': 'add:todo:item'
+  },
+
+  collectionEvents: {
+    add: 'itemAdded'
+  },
+
+  onAddTodoItem: function() {
+    this.collection.add({
+      assignee: this.ui.assignee.val(),
+      text: this.ui.text.val()
+    });
+  },
+
+  itemAdded: function() {
+    this.ui.assignee.val('');
+    this.ui.text.val('');
+  }
 });
 
 var todo = new TodoList({
