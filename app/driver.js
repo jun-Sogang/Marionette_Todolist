@@ -1,6 +1,8 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 
+var ToDoModel = require('./models/todo');
+
 var ToDo = Marionette.LayoutView.extend({
   tagName: 'li',
   template: require('./templates/todoitem.html')
@@ -28,10 +30,14 @@ var TodoList = Marionette.CompositeView.extend({
   },
 
   onAddTodoItem: function() {
-    this.collection.add({
+    this.model.set({
       assignee: this.ui.assignee.val(),
       text: this.ui.text.val()
     });
+    if (this.model.isValid()) {
+      var items = this.model.pick('assignee', 'text');
+      this.collection.add(items);
+    }
   },
 
   itemAdded: function() {
@@ -50,7 +56,8 @@ var todo = new TodoList({
       assignee: 'Andrew',
       text: 'Do some coding'
     }
-  ])
+  ]),
+  model: new ToDoModel()
 });
 
 todo.render();
