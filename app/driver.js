@@ -1,25 +1,29 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 
+var ToDo = Marionette.LayoutView.extend({
+  tagName: 'li',
+  template: require('./templates/todoitem.html')
+});
 
-var TodoList = Marionette.LayoutView.extend({
+var TodoList = Marionette.CollectionView.extend({
   el: '#app-hook',
-  template: require('./templates/layout.html')
+  tagName: 'ul',
+
+  childView: ToDo
 });
 
 var todo = new TodoList({
-  model: new Backbone.Model({
-    items: [
-      {
-        assignee: 'Scott',
-        text: 'Write a book about Marionette'
-      },
-      {
-        assignee: 'Andrew',
-        text: 'Do some coding'
-      }
-    ]
-  })
+  collection: new Backbone.Collection([
+    {
+      assignee: 'Scott',
+      text: 'Write a book about Marionette',
+    },
+    {
+      assignee: 'Andrew',
+      text: 'Do some coding'
+    }
+  ])
 });
 
 todo.render();
